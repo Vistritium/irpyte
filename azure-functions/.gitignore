@@ -94,3 +94,5 @@ fabric.properties
 .idea/
 
 # End of https://www.gitignore.io/api/intellij+all
+
+dependency-reduced-pom.xml

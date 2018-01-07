@@ -1,4 +1,4 @@
-package com.irpyte;
+package com.irpyte.server;
 
 import org.junit.Ignore;
 import org.junit.Test;

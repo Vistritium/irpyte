@@ -1,4 +1,4 @@
-package com.irpyte;
+package com.irpyte.server;
 
 import java.util.*;
 
