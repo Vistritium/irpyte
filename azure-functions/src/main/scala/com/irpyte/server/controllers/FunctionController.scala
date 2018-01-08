@@ -6,6 +6,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 
 object FunctionController {
 
+  @throws(classOf[Exception])
   def wrap[AnyRef](context: ExecutionContext, request: HttpRequestMessage[_], config: String,
                    fun: () => HttpResponseMessage[AnyRef]
                   ): HttpResponseMessage[AnyRef] = {

@@ -2,9 +2,10 @@ package com.irpyte.server
 
 import java.nio.charset.StandardCharsets
 
-import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.typesafe.config.ConfigFactory
+import com.irpyte.server.data.AppSettings
+import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 
 object Config {
 
@@ -20,7 +21,10 @@ object Config {
     mapper.registerModule(DefaultScalaModule)
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     mapper.enable(SerializationFeature.INDENT_OUTPUT)
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     mapper
   }
+
+  lazy val httpClient: CloseableHttpClient = HttpClients.createDefault()
 
 }

@@ -1,19 +1,14 @@
 package com.irpyte.server.form;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-import java.util.List;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class SettingsForm {
 
-    private List<String> tags;
-    private String name;
+    private String search;
+
+    public String getSearch() {
+        return search;
+    }
 
 }
