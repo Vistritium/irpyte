@@ -1,14 +1,26 @@
 package com.irpyte.server
 
-import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.typesafe.config.ConfigFactory
 
 object Config {
 
-  val config: Config = {
-    val stream = getClass.getResourceAsStream("app.conf")
-    ConfigFactory.parseReader(new InputStreamReader(stream))
+  var config: AppSettings = _
+
+  def initConfig(data: String): Unit = {
+    this.config = objectMapper.readValue(data.getBytes(StandardCharsets.UTF_8), classOf[AppSettings])
+  }
+
+
+  val objectMapper: ObjectMapper = {
+    val mapper = new ObjectMapper()
+    mapper.registerModule(DefaultScalaModule)
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+    mapper.enable(SerializationFeature.INDENT_OUTPUT)
+    mapper
   }
 
 }
