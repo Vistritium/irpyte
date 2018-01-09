@@ -8,7 +8,7 @@ import com.microsoft.azure.serverless.functions.HttpResponseMessage;
 import com.microsoft.azure.serverless.functions.annotation.*;
 import lombok.*;
 
-public class MainController  {
+public class RegistrationController {
 
     @StorageAccount(Constants.STORAGE_ACCOUNT)
     @FunctionName("create")
