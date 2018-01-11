@@ -1,4 +1,4 @@
-name := "lock-screen"
+name := "win-wallpaper-changer"
 
 version := "0.1"
 

@@ -98,7 +98,7 @@ object AlphacodersWallpaperProvider extends WallpaperProvider with Logging {
   }
 
   private def searchResponseToImageResults(searchResponse: AlphacodersSearchResponse): List[ImageResult] = {
-    searchResponse.wallpapers.map(entry => ImageResult(entry.id, entry.urlImage, entry.urlImage))
+    searchResponse.wallpapers.map(entry => ImageResult(entry.id, entry.urlImage, entry.fileType))
   }
 
 

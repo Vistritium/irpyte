@@ -1,6 +1,5 @@
 package com.irpyte.lockscreen
 
-import java.io.InputStream
 import java.nio.file.{Files, Path, Paths, StandardCopyOption}
 
 class LockScreenImageChanger extends ImageChanger {
@@ -24,8 +23,8 @@ class LockScreenImageChanger extends ImageChanger {
     }
   }
 
-  def change(inputStream: InputStream): Unit = {
-    Files.copy(inputStream, backgroundFilePath, StandardCopyOption.REPLACE_EXISTING)
+  def change(image: Path): Unit = {
+    Files.copy(image, backgroundFilePath, StandardCopyOption.REPLACE_EXISTING)
   }
 
 }

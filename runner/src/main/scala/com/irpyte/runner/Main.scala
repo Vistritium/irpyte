@@ -1,19 +1,21 @@
 package com.irpyte.runner
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.Paths
 
-import com.irpyte.lockscreen.LockScreenImageChanger
+import com.irpyte.lockscreen.DesktopWallpaperImageChanger
 import com.typesafe.scalalogging.LazyLogging
 
 object Main extends LazyLogging {
 
   def main(args: Array[String]): Unit = {
 
-    val changer = new LockScreenImageChanger()
+    //val changer = new DesktopWallpaperImageChanger()
 
-    changer.change(Files.newInputStream(Paths.get("C:/tmp/wallpaper.jpg")))
+    //changer.change(Paths.get("C:/tmp/folder with spaces/wallpaper1.bmp"))
+    //changer.change(Paths.get("C:/tmp/folder with spaces/wallpaper2.bmp"))
+    //changer.change(Paths.get("C:/tmp/folder with spaces/wallpaper3.bmp"))
+    //val gui = new GUI
 
-    logger.info("I have won")
   }
 
 }
