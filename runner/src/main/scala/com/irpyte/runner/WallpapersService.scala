@@ -19,7 +19,7 @@ object WallpapersService extends LazyLogging {
 
   def createNew(search: String): Unit = {
     val response = connect.create(search)
-    DB.update(DB.getAppConfig().copy(wallpaperId = Some(response.id)))
+    DB.update(DB.getAppConfig().copy(wallpaperId = Some(response.id), imageFilenames = List.empty))
     logger.info(s"Updated id with ${response.id}")
   }
 

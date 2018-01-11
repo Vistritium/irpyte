@@ -4,14 +4,16 @@ import java.nio.file.Files
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
+import javafx.scene.Scene
 import javafx.scene.control.TextField
 import javafx.scene.image.{Image, ImageView}
-import javafx.scene.{Parent, Scene}
-import javafx.scene.layout.{AnchorPane, HBox, VBox}
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
 
-import com.irpyte.lockscreen.DesktopWallpaperImageChanger
+import com.irpyte.lockscreen.{DesktopWallpaperImageChanger, LockScreenImageChanger}
 import com.typesafe.scalalogging.LazyLogging
+
+import scala.util.{Failure, Success, Try}
 
 class GUI extends Application with LazyLogging {
 
@@ -44,7 +46,7 @@ class GUI extends Application with LazyLogging {
   @FXML def search(event: ActionEvent): Unit = {
 
     val text = searchText.getText
-    if(text.trim.nonEmpty){
+    if (text.trim.nonEmpty) {
       WallpapersService.createNew(text)
     }
     logger.info("onSearch")

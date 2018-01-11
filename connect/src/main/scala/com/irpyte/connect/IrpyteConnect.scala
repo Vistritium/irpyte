@@ -16,9 +16,9 @@ class IrpyteConnect(address: String) {
   }
 
   private val client = new OkHttpClient.Builder()
-    .connectTimeout(30, TimeUnit.SECONDS)
-    .writeTimeout(30, TimeUnit.SECONDS)
-    .readTimeout(40, TimeUnit.SECONDS)
+    .connectTimeout(60, TimeUnit.SECONDS)
+    .writeTimeout(60, TimeUnit.SECONDS)
+    .readTimeout(80, TimeUnit.SECONDS)
     .build();
   private val createPath = address + "/api/create"
   private val wallpaperPath = address + "/api/wallpaper"
