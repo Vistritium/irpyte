@@ -1,6 +1,7 @@
 package com.irpyte.runner
 
 import java.nio.file.Files
+import java.util.concurrent.{ExecutorService, Executors, TimeUnit}
 import javafx.application.Application
 import javafx.event.ActionEvent
 import javafx.fxml.{FXML, FXMLLoader}
@@ -16,8 +17,8 @@ import com.typesafe.scalalogging.LazyLogging
 import scala.util.{Failure, Success, Try}
 
 class GUI extends Application with LazyLogging {
-
-  val changer = new DesktopWallpaperImageChanger
+  private val scheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+  private val changer = new DesktopWallpaperImageChanger
 
   override def start(stage: Stage): Unit = {
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("scene.fxml"))
@@ -26,8 +27,13 @@ class GUI extends Application with LazyLogging {
 
     stage.show()
     stage.setScene(new Scene(parent))
-    stage.setTitle("FXML Welcome")
+    stage.setTitle("Irypyte")
 
+    DB.getAppConfig().searchTerms.foreach(search => {
+      searchText.setText(search)
+    })
+
+    scheduledExecutorService.scheduleAtFixedRate(() => WallpapersService.tick(), 0, 1, TimeUnit.HOURS)
   }
 
 

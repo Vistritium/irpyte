@@ -11,6 +11,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future, Promise}
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
+import resource._
 
 object WallpapersService extends LazyLogging {
 
@@ -19,11 +20,21 @@ object WallpapersService extends LazyLogging {
 
   def createNew(search: String): Unit = {
     val response = connect.create(search)
-    DB.update(DB.getAppConfig().copy(wallpaperId = Some(response.id), imageFilenames = List.empty))
+    DB.update(DB.getAppConfig().copy(wallpaperId = Some(response.id), imageFilenames = List.empty, searchTerms = Some(search)))
     logger.info(s"Updated id with ${response.id}")
   }
 
-  def getNextWallpaper(): Option[Path] = {
+  def tick(): Unit = this.synchronized {
+    logger.info("tick")
+    DB.getAppConfig().wallpaperId.foreach(id => {
+      if (DB.getAppConfig().imageFilenames.lengthCompare(5) < 0) {
+        downloadNewImages(id)
+      }
+    })
+
+  }
+
+  def getNextWallpaper(): Option[Path] = this.synchronized {
 
     DB.getAppConfig().wallpaperId.flatMap(id => {
 
@@ -51,6 +62,7 @@ object WallpapersService extends LazyLogging {
   }
 
   private def downloadNewImages(id: String): Unit = {
+    logger.info("downloadNewImages")
     val response = connect.wallpaper(id)
 
     if (response.imageResults.isEmpty) {
@@ -66,27 +78,28 @@ object WallpapersService extends LazyLogging {
 
       client.newCall(request).enqueue(new Callback {
         override def onResponse(call: Call, response: Response): Unit = {
-          if (response.isSuccessful) {
-            Try {
-              val extension = entry.url.split('.').last
-              val file = DB.wallpapersDirectory.resolve(s"${entry.id}.${extension}")
-              Files.copy(response.body().byteStream(), file, StandardCopyOption.REPLACE_EXISTING)
-              logger.info(s"Downloaded $file")
-              file
-            } match {
-              case Failure(exception) => {
-                logger.error(s"error for ${entry.url}", exception)
-                promise.failure(exception)
+          for (response <- managed(response)) {
+            if (response.isSuccessful) {
+              Try {
+                val extension = entry.url.split('.').last
+                val file = DB.wallpapersDirectory.resolve(s"${entry.id}.$extension")
+                Files.copy(response.body().byteStream(), file, StandardCopyOption.REPLACE_EXISTING)
+                logger.info(s"Downloaded $file")
+                file
+              } match {
+                case Failure(exception) => {
+                  logger.error(s"error for ${entry.url}", exception)
+                  promise.failure(exception)
+                }
+                case Success(value) => promise.success(value)
               }
-              case Success(value) => promise.success(value)
+            } else {
+              val errorStr = s"Not successful response: for uri ${entry.url} : " +
+                s"${response.body().string()}"
+              logger.error(errorStr)
+              promise.failure(new IllegalStateException(errorStr))
             }
-          } else {
-            val errorStr = s"Not successful response: for uri ${entry.url} : " +
-              s"${response.body().string()}"
-            logger.error(errorStr)
-            promise.failure(new IllegalStateException(errorStr))
           }
-          response.close()
         }
 
         override def onFailure(call: Call, e: IOException): Unit = {
@@ -109,7 +122,6 @@ object WallpapersService extends LazyLogging {
     val paths = Await.result(eventualPaths, 10 minutes)
 
     logger.info(s"Dowloaded ${paths.size} images")
-
 
     DB.update(DB.getAppConfig().copy(imageFilenames = DB.getAppConfig().imageFilenames ::: paths.map(_.getFileName.toString)))
   }
