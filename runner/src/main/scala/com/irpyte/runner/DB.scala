@@ -19,6 +19,11 @@ object DB extends LazyLogging {
     Files.createDirectory(wallpapersDirectory)
   }
 
+  val usedWallpapersDirectory: Path = appDirectory.resolve("live")
+  if (Files.exists(usedWallpapersDirectory)) {
+    Files.createDirectory(usedWallpapersDirectory)
+  }
+
   private var appConfig: AppConfig = {
     if (!Files.exists(configFile)) {
       Files.write(configFile, Config.objectMapper.writeValueAsBytes(AppConfig(None, None,

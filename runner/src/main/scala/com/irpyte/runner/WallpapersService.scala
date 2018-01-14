@@ -12,6 +12,7 @@ import scala.concurrent.{Await, Future, Promise}
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 import resource._
+import collection.JavaConverters._
 
 object WallpapersService extends LazyLogging {
 
@@ -32,7 +33,24 @@ object WallpapersService extends LazyLogging {
       }
     })
 
+
+    Files.newDirectoryStream(DB.wallpapersDirectory)
+      .iterator().asScala.toList
+      .filterNot(path => DB.getAppConfig().imageFilenames.contains(path.getFileName.toString))
+      .sortBy(path => Files.getLastModifiedTime(path).toMillis)
+      .reverse.drop(30)
+      .foreach(file => {
+        logger.info(s"Deleting $file")
+        Try {
+          Files.delete(file)
+        } match {
+          case Failure(exception) => logger.warn(s"Couldn't telete $exception")
+          case Success(_) =>
+        }
+      })
+
   }
+
 
   def getNextWallpaper(): Option[Path] = this.synchronized {
 
@@ -58,7 +76,6 @@ object WallpapersService extends LazyLogging {
         Some(DB.wallpapersDirectory.resolve(head))
       }
     })
-
   }
 
   private def downloadNewImages(id: String): Unit = {
@@ -83,7 +100,9 @@ object WallpapersService extends LazyLogging {
               Try {
                 val extension = entry.url.split('.').last
                 val file = DB.wallpapersDirectory.resolve(s"${entry.id}.$extension")
-                Files.copy(response.body().byteStream(), file, StandardCopyOption.REPLACE_EXISTING)
+                if (!Files.exists(file)) {
+                  Files.copy(response.body().byteStream(), file, StandardCopyOption.REPLACE_EXISTING)
+                }
                 logger.info(s"Downloaded $file")
                 file
               } match {
