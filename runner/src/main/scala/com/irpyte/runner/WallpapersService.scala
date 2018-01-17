@@ -33,27 +33,31 @@ object WallpapersService extends LazyLogging {
       }
     })
 
-
-    Files.newDirectoryStream(DB.wallpapersDirectory)
-      .iterator().asScala.toList
-      .filterNot(path => DB.getAppConfig().imageFilenames.contains(path.getFileName.toString))
-      .sortBy(path => Files.getLastModifiedTime(path).toMillis)
-      .reverse.drop(30)
-      .foreach(file => {
-        logger.info(s"Deleting $file")
-        Try {
-          Files.delete(file)
-        } match {
-          case Failure(exception) => logger.warn(s"Couldn't telete $exception")
-          case Success(_) =>
-        }
-      })
+    try {
+      Files.newDirectoryStream(DB.wallpapersDirectory)
+        .iterator().asScala.toList
+        .filterNot(path => DB.getAppConfig().imageFilenames.contains(path.getFileName.toString))
+        .sortBy(path => Files.getLastModifiedTime(path).toMillis)
+        .reverse.drop(30)
+        .foreach(file => {
+          logger.info(s"Deleting $file")
+          Try {
+            Files.delete(file)
+          } match {
+            case Failure(exception) => logger.warn(s"Couldn't delete $exception")
+            case Success(_) =>
+          }
+        })
+    } catch {
+      case x: Exception => logger.warn(s"Cleanup failed ${x.getMessage}")
+    }
+    logger.info("Deleted")
 
   }
 
 
   def getNextWallpaper(): Option[Path] = this.synchronized {
-
+    logger.info("Trying to find new wallpaper")
     DB.getAppConfig().wallpaperId.flatMap(id => {
 
       val filenames = DB.getAppConfig().imageFilenames
@@ -69,11 +73,12 @@ object WallpapersService extends LazyLogging {
       } else {
         val filenames = DB.getAppConfig().imageFilenames
         val head :: tail = filenames
-
-        DB.update(DB.getAppConfig().copy(imageFilenames = tail))
+        val returningPath = DB.wallpapersDirectory.resolve(head)
+        DB.update(DB.getAppConfig().copy(imageFilenames = tail,
+          currentWallpaperPath = Some(returningPath.toAbsolutePath.toString)))
 
         logger.info(s"Changing to $head")
-        Some(DB.wallpapersDirectory.resolve(head))
+        Some(returningPath)
       }
     })
   }

@@ -2,6 +2,7 @@ package com.irpyte.runner
 
 import java.awt.event.ActionEvent
 import java.awt.{Image, MenuItem, PopupMenu}
+import java.nio.file.Paths
 import javafx.stage.WindowEvent
 
 import com.typesafe.scalalogging.LazyLogging
@@ -31,6 +32,7 @@ object Tray extends LazyLogging {
       // create a action listener to listen for default action executed on the tray icon
       val closeListener = new ActionListener() {
         override def actionPerformed(e: ActionEvent): Unit = {
+          Platform.exit()
           System.exit(0)
         }
       }
@@ -59,6 +61,9 @@ object Tray extends LazyLogging {
         logger.info("Click tray")
         Platform.runLater(() => {
           stage.show()
+          DB.getAppConfig().currentWallpaperPath.foreach(uri => {
+            gui.setImage(Paths.get(uri))
+          })
         })
       })
 
@@ -67,16 +72,18 @@ object Tray extends LazyLogging {
       tray.add(trayIcon)
 
     }
+
+    def hide(stage: Stage): Unit = {
+      Platform.runLater(() => {
+        if (SystemTray.isSupported) {
+          stage.hide()
+          gui.clearImage()
+          System.gc()
+        }
+        else System.exit(0)
+      })
+    }
   }
 
-
-  private def hide(stage: Stage): Unit = {
-    Platform.runLater(() => {
-      if (SystemTray.isSupported) {
-        stage.hide()
-      }
-      else System.exit(0)
-    })
-  }
 
 }
