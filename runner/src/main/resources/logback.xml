@@ -1,15 +1,21 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!-- encoders are assigned the type
-             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+    </appender>
+
+    <appender name="APP_DIR_LOGGER" class="com.irpyte.runner.AppDirectoryLogger">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
     </appender>
 
     <logger name="com.irpyte" level="DEBUG"/>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="APP_DIR_LOGGER"/>
     </root>
 </configuration>

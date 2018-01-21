@@ -12,7 +12,8 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "com.typesafe" % "config" % "1.3.2",
   "net.harawata" % "appdirs" % "1.0.1",
-  "com.squareup.okhttp3" % "okhttp" % "3.9.1"
+  "com.squareup.okhttp3" % "okhttp" % "3.9.1",
+  "com.github.sarxos" % "windows-registry-util" % "0.3"
 )
 
 dependsOn(connect, lockScreen)

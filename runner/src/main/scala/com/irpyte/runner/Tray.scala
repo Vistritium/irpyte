@@ -2,7 +2,7 @@ package com.irpyte.runner
 
 import java.awt.event.ActionEvent
 import java.awt.{Image, MenuItem, PopupMenu}
-import java.nio.file.Paths
+import java.nio.file.{FileSystems, Paths}
 import javafx.stage.WindowEvent
 
 import com.typesafe.scalalogging.LazyLogging
@@ -66,6 +66,7 @@ object Tray extends LazyLogging {
           })
         })
       })
+
 
       // ...
       // add the tray image

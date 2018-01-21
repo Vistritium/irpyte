@@ -1,6 +1,5 @@
 package com.irpyte.runner
 
-import java.awt.image.BufferedImage
 import java.nio.file.{Files, Path}
 import java.util.concurrent.{Executors, TimeUnit}
 import javafx.application.{Application, Platform}
@@ -12,7 +11,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
-import com.irpyte.lockscreen.DesktopWallpaperImageChanger
+import com.irpyte.lockscreen.{DesktopWallpaperImageChanger, LockScreenImageChanger}
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.util.{Failure, Success, Try}
@@ -20,12 +19,25 @@ import scala.util.{Failure, Success, Try}
 class GUI extends Application with LazyLogging {
   private val scheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
   private val changer = new DesktopWallpaperImageChanger
+  private val lockScreenChanger: Option[LockScreenImageChanger] = {
+    (Try {
+      val changer = new LockScreenImageChanger()
+      changer.init()
+      Some(changer)
+    } recover {
+      case e: Exception => {
+        logger.warn("Couldn't init lock screen changer", e)
+        None
+      }
+    }).get
+  }
 
   private val dummyImage: Image = new WritableImage(1, 1)
 
   var progressIndicatorControl: ProgressIndicatorControl = null
 
   override def start(stage: Stage): Unit = {
+    SystemUtils.checkStartup()
     Platform.setImplicitExit(false)
 
     val loader = new FXMLLoader(getClass.getClassLoader.getResource("scene.fxml"))
@@ -72,6 +84,15 @@ class GUI extends Application with LazyLogging {
       try {
         WallpapersService.getNextWallpaper().foreach(path => {
           changer.change(path)
+          lockScreenChanger.foreach(lockScreenChanger => {
+            Try {
+              lockScreenChanger.change(path)
+            } match {
+              case Failure(exception) => logger.warn(s"Couldn't set lockscreen", exception)
+              case Success(_) =>
+            }
+          })
+
           setImage(path)
         })
       } catch {

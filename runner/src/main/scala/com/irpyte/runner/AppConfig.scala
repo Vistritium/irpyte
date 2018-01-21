@@ -5,6 +5,7 @@ case class AppConfig(
                       searchTerms: Option[String],
                       currentWallpaperPath: Option[String],
                       wallpaperUri: String,
-                      imageFilenames: List[String]
+                      imageFilenames: List[String],
+                      wasAutoStartSet: Boolean = false
                     )
 

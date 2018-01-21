@@ -7,7 +7,7 @@ import net.harawata.appdirs.AppDirsFactory
 
 object DB extends LazyLogging {
 
-  val appDirectory: Path = Paths.get(AppDirsFactory.getInstance().getUserDataDir("irpyte", null, null))
+  val appDirectory: Path = DBRaw.appDirectory
   logger.info(s"App directory: $appDirectory")
   if (!Files.exists(appDirectory)) {
     Files.createDirectories(appDirectory)
