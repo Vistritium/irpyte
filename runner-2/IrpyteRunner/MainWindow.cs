@@ -78,11 +78,6 @@ namespace IrpyteRunner
             }
         }
 
-        private void LoadResources()
-        {
-            LoadCurrentWallpaper();
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             logger.Info("OnClosing");

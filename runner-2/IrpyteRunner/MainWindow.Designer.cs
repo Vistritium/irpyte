@@ -60,6 +60,7 @@ namespace IrpyteRunner
             this.progressIndicator.Size = new System.Drawing.Size(115, 54);
             this.progressIndicator.TabIndex = 3;
             this.progressIndicator.TabStop = false;
+            this.progressIndicator.Hide();
             // 
             // searchButton
             // 
