@@ -61,11 +61,30 @@ namespace IrpyteRunner.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://irypyteserver2.azurewebsites.net.
+        /// </summary>
+        internal static string defaultUri {
+            get {
+                return ResourceManager.GetString("defaultUri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap icon {
             get {
                 object obj = ResourceManager.GetObject("icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap progress_indicator {
+            get {
+                object obj = ResourceManager.GetObject("progress_indicator", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
