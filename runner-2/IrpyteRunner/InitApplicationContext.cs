@@ -38,10 +38,16 @@ namespace IrpyteRunner
             _trayIcon.Click += OnTrayClick;
 
             var appConfig = DB.Instance.GetConfig();
-            if (appConfig.lastWallpaperSetTime.HasValue && appConfig.lastWallpaperSetTime.Value.Day != DateTime.Now.Day)
+            var nowDay = DateTime.Now.Day;
+            if (appConfig.lastWallpaperSetTime.HasValue && appConfig.lastWallpaperSetTime.Value.Day != nowDay)
             {
-                logger.Info($"lastWallpaperSetTime is {appConfig.lastWallpaperSetTime.Value} and now is day ${DateTime.Now.Day} so going to get next");
+                logger.Info(
+                    $"lastWallpaperSetTime is {appConfig.lastWallpaperSetTime.Value} and now is day ${nowDay} so going to get next");
                 _wallpaperService.GetNewWallpaper();
+            }
+            else if(appConfig.lastWallpaperSetTime.HasValue)
+            {
+                logger.Info($"lastWallpaperSetTime is {appConfig.lastWallpaperSetTime.Value} and now is day ${nowDay} so not going to get next");
             }
 
             if (runMainWindow)
