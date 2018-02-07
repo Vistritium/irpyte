@@ -26,8 +26,9 @@ object DB extends LazyLogging {
 
   private var appConfig: AppConfig = {
     if (!Files.exists(configFile)) {
-      Files.write(configFile, Config.objectMapper.writeValueAsBytes(AppConfig(None, None, None,
-        Config.config.getString("defaultUri"), List.empty)))
+      Files.write(configFile, Config.objectMapper.writeValueAsBytes(AppConfig(
+        None, None, None, Config.config.getString("defaultUri"), List.empty))
+      )
     }
     Config.objectMapper.readValue(Files.newBufferedReader(configFile), classOf[AppConfig])
   }

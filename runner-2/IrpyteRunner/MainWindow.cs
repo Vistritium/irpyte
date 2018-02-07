@@ -23,6 +23,7 @@ namespace IrpyteRunner
 
         public MainWindow(WallpaperService wallpaperService)
         {
+            CreateHandle();
             logger.Info("App is starting.");
             logger.Info($"App directory: {DB.Instance.AppPath}");
             _wallpaperService = wallpaperService;

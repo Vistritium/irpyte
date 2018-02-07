@@ -1,1 +1,1 @@
-REG ADD "HKCR\Software\Migit statuscrosoft\Windows\CurrentVersion\Run" /v %1 /f /d %2
+REG ADD "HKCR\Software\Microsoft\Windows\CurrentVersion\Run" /v %1 /f /d %2
