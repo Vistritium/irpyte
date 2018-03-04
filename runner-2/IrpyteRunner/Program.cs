@@ -25,7 +25,6 @@ namespace IrpyteRunner
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-
             try
             {
                 Target.Register<DefaultLoggingTarget>("IrpyteDefault");
@@ -56,15 +55,17 @@ namespace IrpyteRunner
                         logger.Info("autostarted going to GetNewWallpaper");
                         wallpaperService.GetNewWallpaper().Wait();
                     }
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    var initApplicationContext = new InitApplicationContext(wallpaperService, !autostarted);
-                    logger.Info("setting  DuplicateInstanceUtil.OnShow ");
-                    DuplicateInstanceUtil.OnShow = initApplicationContext.Show;
+                    else
+                    {
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        var mainWindow = new MainWindow(wallpaperService);
+                        logger.Info("setting  DuplicateInstanceUtil.OnShow ");
 
-                    Application.Run(initApplicationContext);
+                        DuplicateInstanceUtil.OnShow = mainWindow.Show;
+                        Application.Run(mainWindow);
+                    }
                 }
-
             }
             catch (Exception e)
             {

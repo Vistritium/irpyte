@@ -10,8 +10,6 @@ namespace IrpyteRunner.Utils
 {
     public class DuplicateInstanceUtil
     {
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         private static Logger _logger = LogManager.GetCurrentClassLogger();
 
@@ -51,9 +49,7 @@ namespace IrpyteRunner.Utils
             {
                 _logger.Info("Invoking OnShow");
                 OnShow.Invoke();
-            }
-            // Specify what is done when a file is changed, created, or deleted.
-    
+            }    
         }
         
     }

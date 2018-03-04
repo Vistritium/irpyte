@@ -115,7 +115,6 @@
     <Compile Include="Downloader\IrpyteDownloader.cs" />
     <Compile Include="Downloader\WallpaperResponse.cs" />
     <Compile Include="Downloader\WallpaperResponseEntry.cs" />
-    <Compile Include="InitApplicationContext.cs" />
     <Compile Include="Logging\DefaultLoggingTarget.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>

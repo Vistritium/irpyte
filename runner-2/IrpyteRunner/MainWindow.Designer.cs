@@ -60,7 +60,7 @@ namespace IrpyteRunner
             this.progressIndicator.Size = new System.Drawing.Size(115, 54);
             this.progressIndicator.TabIndex = 3;
             this.progressIndicator.TabStop = false;
-            this.progressIndicator.Hide();
+            this.progressIndicator.Visible = false;
             // 
             // searchButton
             // 
@@ -115,12 +115,11 @@ namespace IrpyteRunner
             this.ClientSize = new System.Drawing.Size(798, 681);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
-            this.Name = "Irpyte";
+            this.MaximizeBox = false;
+            this.Name = "MainWindow";
             this.Text = "Irpyte";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             ((System.ComponentModel.ISupportInitialize)(this.progressIndicator)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
