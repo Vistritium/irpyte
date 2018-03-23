@@ -28,7 +28,10 @@ namespace IrpyteRunner.DBPackage
 
         [DataMember]
         public DateTime? lastWallpaperSetTime;
-
+        
+        [DataMember]
+        public NewVersionStatus NewVersionStatus;
+        
 
         public AppConfig(string wallpaperId, string searchTerms, string currentWallpaperPath, string wallpaperUri, List<string> imageFileNames, bool wasAutoStartSet, DateTime? lastWallpaperSetTime)
         {

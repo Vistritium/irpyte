@@ -29,6 +29,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -110,9 +112,11 @@
   <ItemGroup>
     <Compile Include="DBPackage\AppConfig.cs" />
     <Compile Include="DBPackage\DB.cs" />
+    <Compile Include="DBPackage\NewVersionStatus.cs" />
     <Compile Include="Downloader\CreateForm.cs" />
     <Compile Include="Downloader\CreateResponse.cs" />
     <Compile Include="Downloader\IrpyteDownloader.cs" />
+    <Compile Include="Downloader\VersionResponse.cs" />
     <Compile Include="Downloader\WallpaperResponse.cs" />
     <Compile Include="Downloader\WallpaperResponseEntry.cs" />
     <Compile Include="Logging\DefaultLoggingTarget.cs" />
@@ -127,10 +131,12 @@
     <Compile Include="Services\CreateNewResult.cs" />
     <Compile Include="Services\DownloadNewImagesResult.cs" />
     <Compile Include="Services\PotentialError.cs" />
+    <Compile Include="Services\VersionService.cs" />
     <Compile Include="Services\WallpaperChanger.cs" />
     <Compile Include="Services\WallpaperService.cs" />
     <Compile Include="Utils\DuplicateInstanceUtil.cs" />
     <Compile Include="Utils\TaskUtils.cs" />
+    <Compile Include="Utils\VersionUtils.cs" />
     <None Include="IrpyteRunner_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Resources\progress_indicator.gif" />

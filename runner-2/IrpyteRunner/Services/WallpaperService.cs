@@ -18,12 +18,14 @@ namespace IrpyteRunner.Services
 
         private IrpyteDownloader _irpyteDownloader;
         private HttpClient _httpClient = new HttpClient();
+        private VersionService _versionService;
         
         private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        public WallpaperService(IrpyteDownloader irpyteDownloader)
+        public WallpaperService(IrpyteDownloader irpyteDownloader, VersionService versionService)
         {
             _irpyteDownloader = irpyteDownloader;
+            _versionService = versionService;
         }
 
         public bool IsBusy()
@@ -46,6 +48,7 @@ namespace IrpyteRunner.Services
                 logger.Info("tick");
                 DownloadNewIfNeeded().Wait();
                 TryCleanUp();
+                _versionService.CheckVersion();
             }
             finally
             {
@@ -164,7 +167,11 @@ namespace IrpyteRunner.Services
 
         private async Task<DownloadNewImagesResult> DownloadNewIfNeeded()
         {
-            Task.Run(() => TryCleanUp());
+            Task.Run(() =>
+            {
+                TryCleanUp();
+                _versionService.CheckVersion();
+            });
             
             var wallpaperId = DB.Instance.GetConfig().wallpaperId;
             if (wallpaperId != null && DB.Instance.GetConfig().imageFileNames.Count < 5)

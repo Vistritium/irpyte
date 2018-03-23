@@ -45,8 +45,16 @@ namespace IrpyteRunner
 
                     logger.Info($"App args: {String.Join(", ", args.ToList())}");
 
+
+                    
                     var downloader = new IrpyteDownloader(DB.Instance.GetConfig().wallpaperUri);
-                    var wallpaperService = new WallpaperService(downloader);
+                    var versionService = new VersionService(downloader);
+
+                    versionService.AssureVersion();
+                    versionService.CheckVersion();
+                    
+                    
+                    var wallpaperService = new WallpaperService(downloader, versionService);
 
                     if (autostarted)
                     {
@@ -59,7 +67,7 @@ namespace IrpyteRunner
                     {
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
-                        var mainWindow = new MainWindow(wallpaperService);
+                        var mainWindow = new MainWindow(wallpaperService, versionService);
                         logger.Info("setting  DuplicateInstanceUtil.OnShow ");
 
                         DuplicateInstanceUtil.OnShow = mainWindow.Show;

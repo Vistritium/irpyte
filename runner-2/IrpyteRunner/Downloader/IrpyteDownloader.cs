@@ -14,6 +14,7 @@ namespace IrpyteRunner.Downloader
 
         private String _createPath;
         private String _wallpaperPath;
+        private String _versionPath;
 
 
         private HttpClient _client = new HttpClient();
@@ -23,7 +24,30 @@ namespace IrpyteRunner.Downloader
         {
             _createPath = address + "/api/create";
             _wallpaperPath = address + "/api/wallpaper";
+            _versionPath = address + "/api/version";
             _client.Timeout = TimeSpan.FromMinutes(3);
+        }
+
+        public async Task<VersionResponse> CheckVersion(String currentVersion)
+        {
+            logger.Info($"checking version");
+            var requestUri = _versionPath + "/" + currentVersion;
+            logger.Debug("performing request " + requestUri);
+            using (HttpResponseMessage response = await _client.GetAsync(requestUri))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var serializer = new DataContractJsonSerializer(typeof(VersionResponse));
+
+                    Stream stream = await response.Content.ReadAsStreamAsync();
+                    return serializer.ReadObject(stream) as VersionResponse;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Not successfull response: {response.EnsureSuccessStatusCode()}");
+                }
+            }
         }
 
         public async Task<WallpaperResponse> Wallpaper(String id)
@@ -56,7 +80,7 @@ namespace IrpyteRunner.Downloader
             using (var memoryStream = new MemoryStream())
             {
                 serializer.WriteObject(memoryStream, createForm);
-                memoryStream.Position = 0;  
+                memoryStream.Position = 0;
                 postContent = new StreamReader(memoryStream).ReadToEnd();
             }
 

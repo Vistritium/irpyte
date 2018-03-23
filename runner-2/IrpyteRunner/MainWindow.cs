@@ -16,17 +16,19 @@ namespace IrpyteRunner
     public partial class MainWindow : Form
     {
         private readonly WallpaperService _wallpaperService;
+        private readonly VersionService _versionService;
 
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private List<Control> interactiveComponents = new List<Control>();
 
-        public MainWindow(WallpaperService wallpaperService)
+        public MainWindow(WallpaperService wallpaperService, VersionService versionService)
         {
             CreateHandle();
             logger.Info("App is starting.");
             logger.Info($"App directory: {DB.Instance.AppPath}");
             _wallpaperService = wallpaperService;
+            _versionService = versionService;
             this.Icon = Icon.FromHandle(Resources.icon.GetHicon());
 
             InitializeComponent();
@@ -39,13 +41,16 @@ namespace IrpyteRunner
                 this.searchBox.Text = DB.Instance.GetConfig().searchTerms;
             }
 
+
+            newVersionLabel.Visible = versionService.IsNewerVersionAvailable();
+
             LoadCurrentWallpaper();
 
             if (_wallpaperService.IsBusy())
             {
                 logger.Info("Oops, servcie busy, waiting..");
                 LoadingIndicatorStart();
-                
+
                 new Thread(() =>
                 {
                     logger.Info("Wait thread start");
@@ -205,13 +210,35 @@ namespace IrpyteRunner
             }
         }
 
-       
+
         private void searchBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == Convert.ToChar(Keys.Return))
             {
                 e.Handled = true;
                 HandleSearch();
+            }
+        }
+
+        private void poweredByLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://wall.alphacoders.com");
+        }
+
+        private void iconByLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.freepik.com/");
+        }
+
+        private void newVersionLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (_versionService.IsNewerVersionAvailable())
+            {
+                System.Diagnostics.Process.Start(DB.Instance.GetConfig().NewVersionStatus.newVersionUrl);
+            }
+            else
+            {
+                newVersionLabel.Visible = false;
             }
         }
     }

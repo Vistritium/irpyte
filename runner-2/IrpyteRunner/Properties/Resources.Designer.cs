@@ -61,7 +61,7 @@ namespace IrpyteRunner.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://irypyteserver2.azurewebsites.net.
+        ///   Looks up a localized string similar to http://api.irpyte.org.
         /// </summary>
         internal static string defaultUri {
             get {
